@@ -1,0 +1,598 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "week 7: visualizing time series data.ipynb",
+      "provenance": []
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "RBHOb00D_b6f",
+        "colab_type": "text"
+      },
+      "source": [
+        "## **Week 7: visualizing time series data**\n",
+        "\n",
+        "Acquire power data from this source for at least 10 days and not more than 40 days. The website limits the window size, so you will need to download multiple files. Load the data into a Jupyter Notebook. Combine the multiple input files to create a single dataframe.\n",
+        "\n",
+        "Create a bar graph of the power consumption per hour.\n",
+        "\n",
+        "\n",
+        "*   The bar graph has 24 bars; each bar is the average across all days for that hour​\n",
+        "\n",
+        "\n",
+        "Submit the .ipynb file containing the analysis and the generated pictures.​"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "uvOUtuQxmvum",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "# Importing required libraries\n",
+        "import pandas as pd\n",
+        "import seaborn as sns\n",
+        "import matplotlib.pyplot as plt"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "0dxlDXx8m1LS",
+        "colab_type": "code",
+        "outputId": "067277a0-63b6-4b80-af4f-f44d924d8115",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 202
+        }
+      },
+      "source": [
+        "# Loading the datasets\n",
+        "df1 = pd.read_csv('/content/0301_0307.csv', names=['VD','settlement_date','Demand'], index_col=False, header=0, parse_dates=[1])\n",
+        "df2 = pd.read_csv('/content/0308_0313.csv', names=['VD','settlement_date','Demand'], index_col=False, header=0, parse_dates=[1])\n",
+        "df1.head()"
+      ],
+      "execution_count": 2,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>VD</th>\n",
+              "      <th>settlement_date</th>\n",
+              "      <th>Demand</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>VD</td>\n",
+              "      <td>2020-03-01 00:00:00</td>\n",
+              "      <td>25865.0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>1</th>\n",
+              "      <td>VD</td>\n",
+              "      <td>2020-03-01 00:05:00</td>\n",
+              "      <td>25977.0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2</th>\n",
+              "      <td>VD</td>\n",
+              "      <td>2020-03-01 00:10:00</td>\n",
+              "      <td>25987.0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>3</th>\n",
+              "      <td>VD</td>\n",
+              "      <td>2020-03-01 00:15:00</td>\n",
+              "      <td>26005.0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>4</th>\n",
+              "      <td>VD</td>\n",
+              "      <td>2020-03-01 00:20:00</td>\n",
+              "      <td>25989.0</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>"
+            ],
+            "text/plain": [
+              "   VD     settlement_date   Demand\n",
+              "0  VD 2020-03-01 00:00:00  25865.0\n",
+              "1  VD 2020-03-01 00:05:00  25977.0\n",
+              "2  VD 2020-03-01 00:10:00  25987.0\n",
+              "3  VD 2020-03-01 00:15:00  26005.0\n",
+              "4  VD 2020-03-01 00:20:00  25989.0"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 2
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "x-GJov7PpYiZ",
+        "colab_type": "code",
+        "outputId": "fd71bb76-b521-4733-b91e-3370d024be27",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 202
+        }
+      },
+      "source": [
+        "df2.head()"
+      ],
+      "execution_count": 4,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>VD</th>\n",
+              "      <th>settlement_date</th>\n",
+              "      <th>Demand</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>VD</td>\n",
+              "      <td>2020-03-08 00:00:00</td>\n",
+              "      <td>23316.0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>1</th>\n",
+              "      <td>VD</td>\n",
+              "      <td>2020-03-08 00:05:00</td>\n",
+              "      <td>23654.0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2</th>\n",
+              "      <td>VD</td>\n",
+              "      <td>2020-03-08 00:10:00</td>\n",
+              "      <td>23838.0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>3</th>\n",
+              "      <td>VD</td>\n",
+              "      <td>2020-03-08 00:15:00</td>\n",
+              "      <td>23986.0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>4</th>\n",
+              "      <td>VD</td>\n",
+              "      <td>2020-03-08 00:20:00</td>\n",
+              "      <td>24105.0</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>"
+            ],
+            "text/plain": [
+              "   VD     settlement_date   Demand\n",
+              "0  VD 2020-03-08 00:00:00  23316.0\n",
+              "1  VD 2020-03-08 00:05:00  23654.0\n",
+              "2  VD 2020-03-08 00:10:00  23838.0\n",
+              "3  VD 2020-03-08 00:15:00  23986.0\n",
+              "4  VD 2020-03-08 00:20:00  24105.0"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 4
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "BQWp4H5JrCLx",
+        "colab_type": "code",
+        "outputId": "b5dd0c4a-b100-456a-ceba-c2912ca894cf",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 202
+        }
+      },
+      "source": [
+        "# Concatenating two dataframes\n",
+        "df = pd.concat([df1, df2], ignore_index=True, names=['VD','settlement_date','Demand'])\n",
+        "df.head()"
+      ],
+      "execution_count": 5,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>VD</th>\n",
+              "      <th>settlement_date</th>\n",
+              "      <th>Demand</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>VD</td>\n",
+              "      <td>2020-03-01 00:00:00</td>\n",
+              "      <td>25865.0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>1</th>\n",
+              "      <td>VD</td>\n",
+              "      <td>2020-03-01 00:05:00</td>\n",
+              "      <td>25977.0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2</th>\n",
+              "      <td>VD</td>\n",
+              "      <td>2020-03-01 00:10:00</td>\n",
+              "      <td>25987.0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>3</th>\n",
+              "      <td>VD</td>\n",
+              "      <td>2020-03-01 00:15:00</td>\n",
+              "      <td>26005.0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>4</th>\n",
+              "      <td>VD</td>\n",
+              "      <td>2020-03-01 00:20:00</td>\n",
+              "      <td>25989.0</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>"
+            ],
+            "text/plain": [
+              "   VD     settlement_date   Demand\n",
+              "0  VD 2020-03-01 00:00:00  25865.0\n",
+              "1  VD 2020-03-01 00:05:00  25977.0\n",
+              "2  VD 2020-03-01 00:10:00  25987.0\n",
+              "3  VD 2020-03-01 00:15:00  26005.0\n",
+              "4  VD 2020-03-01 00:20:00  25989.0"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 5
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "3g9UfLkQr5JF",
+        "colab_type": "code",
+        "outputId": "c8cce1c7-643e-4cac-f5e2-5bb319d06006",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 35
+        }
+      },
+      "source": [
+        "# Sanity Check\n",
+        "df.shape[0]==df1.shape[0]+df2.shape[0]"
+      ],
+      "execution_count": 6,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "True"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 6
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "lgYiKm_osB9S",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "# Dropping the VD column\n",
+        "df.drop('VD', axis=1, inplace=True)"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "JKfsEJRu2JpL",
+        "colab_type": "code",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 69
+        },
+        "outputId": "cd58a91a-b426-42cf-dc33-6eeb4fff1dfd"
+      },
+      "source": [
+        "# Checking for null values\n",
+        "df.isnull().sum()"
+      ],
+      "execution_count": 29,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "settlement_date    0\n",
+              "Demand             2\n",
+              "dtype: int64"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 29
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "gz8PY4ca5lRc",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "# Dropping the null values because there are only 2 null values\n",
+        "df.dropna(inplace=True)"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "W2DRcleF5zng",
+        "colab_type": "code",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 69
+        },
+        "outputId": "36f40e9b-4fb7-4281-f3e2-e3bfbec0f923"
+      },
+      "source": [
+        "# Sanity Check\n",
+        "df.isnull().sum()"
+      ],
+      "execution_count": 31,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "settlement_date    0\n",
+              "Demand             0\n",
+              "dtype: int64"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 31
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "jq_-YZ6dz-4h",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "# Calculating the hourly demand for the entire dataset\n",
+        "val = 0\n",
+        "values = []\n",
+        "for i in range(24):\n",
+        "    for j in range(df.shape[0]):\n",
+        "        if(df.iloc[j,0].hour == i):\n",
+        "            val = val + df.iloc[j,1]\n",
+        "    values.append(val)\n",
+        "    val=0"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "F1lHsoU86AUy",
+        "colab_type": "code",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 433
+        },
+        "outputId": "68cc1484-6cd1-4604-9527-420a377c58fe"
+      },
+      "source": [
+        "# Take a look at the values\n",
+        "values"
+      ],
+      "execution_count": 33,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "[4244812.0,\n",
+              " 4239969.0,\n",
+              " 4125273.0,\n",
+              " 4031232.0,\n",
+              " 3974821.0,\n",
+              " 4071172.0,\n",
+              " 4658805.0,\n",
+              " 5294275.0,\n",
+              " 5473422.0,\n",
+              " 5504561.0,\n",
+              " 5412189.0,\n",
+              " 5358955.0,\n",
+              " 5357604.0,\n",
+              " 5320084.0,\n",
+              " 5324689.0,\n",
+              " 5447555.0,\n",
+              " 5783449.0,\n",
+              " 6177266.0,\n",
+              " 6449622.0,\n",
+              " 6011979.0,\n",
+              " 5457204.0,\n",
+              " 5319937.0,\n",
+              " 4803238.0,\n",
+              " 4342878.0]"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 33
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "Hw0v1Z-gyn-m",
+        "colab_type": "code",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 313
+        },
+        "outputId": "5af79c0f-e0d7-4235-f398-ea2623d22305"
+      },
+      "source": [
+        "# Bar plot for demand for each hour in a day\n",
+        "sns.barplot(x=[z for z in range(24)], y=values)\n",
+        "plt.xlabel('Hours in a day')\n",
+        "plt.ylabel('Demand')\n",
+        "plt.title('Demand per each hour in a day for 14 Days')"
+      ],
+      "execution_count": 44,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "Text(0.5, 1.0, 'Demand per each hour in a day for 14 Days')"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 44
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "image/png": "iVBORw0KGgoAAAANSUhEUgAAAXgAAAEWCAYAAABsY4yMAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz\nAAALEgAACxIB0t1+/AAAADh0RVh0U29mdHdhcmUAbWF0cGxvdGxpYiB2ZXJzaW9uMy4yLjEsIGh0\ndHA6Ly9tYXRwbG90bGliLm9yZy+j8jraAAAgAElEQVR4nO3dd7xcVbn/8c/XJPRAKIceCFcBpZcA\nekGNFKUXBZELUZoRriBwUQTx0sTfT8WCghelI00wkFyKVKUqLcFAQpUSCSXkhBaa1Of+sdaRyWHK\nnpOzzznZ+b5fr3mdPbPXs9eamTXPrL32nn0UEZiZWfV8pL8bYGZm5XCCNzOrKCd4M7OKcoI3M6so\nJ3gzs4pygjczqygn+AqSNEJSSBrc323pLZLOlXRiwbL9+vwlXSPpa/1Q7yhJT5e07RMlzZQ0vYzt\nWzmc4BuQNFXSm5JelfSypL9KOkCSXzNrKiK2iYjz+rsdvUXSSsDhwBoRsWwvbfMHkiZLelfScU3K\nnZ2/rD/WpExIel3Sa5JekPQnSbv3Rjvndk5Wze0QEUOBlYEfAd8FzurfJg0cVdpD6ClJg/q7DX1g\nJeCFiJjRbmCTPvIYcARwdZPYzYCPFqxq3YhYBFgdOBc4VdKxbTS1kpzgC4iIVyLiCmB34GuS1gKQ\nNL+kn0p6StLzkn4jacG8bpSkpyUdIWmGpOck7SxpW0mPSnpR0ve66pC0saQ78t7Cc5JOlTRfzfrI\nexB/z2V+LUl53aDcjpmSngC2a/Z88t7JUZIelPSSpHMkLVCzfntJk2r2XNbpFvtdSfcDr9f7AEv6\nuKQb8nN8RNKXa9ZtJ+lvkmZJmtZ99CZps1zny3n93jWrF5d0dd6ruktSqw//nvm9mSnp6Jo65pd0\nsqRn8+1kSfPndXtLur1bm/41gsxTRadJ+qOk14HP1Xn+N0vav3Z7+f15SdKTkrZp1GBJR0p6PD/H\nByXt0qTsgrk9L0l6ENioyLYkzZffm7Vryi4t6Q1JHd22sSVwA7B8HiGfmx/fUdID+X26WdInamJa\n9pGIOC8irgFebfDcBgOnAAc3ev71RMTMiDgfOBA4StKSeXv7SHoovxZPSPpGTV1TJO1Qc39I7jPr\nS1pA0gVKewYvS7pH0jLttKlfRYRvdW7AVGDLOo8/BRyYl38BXAEsAQwFrgT+f143CngXOAYYAnwd\n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\nJqTRSwAAAABJRU5ErkJggg==\n",
+            "text/plain": [
+              "<Figure size 432x288 with 1 Axes>"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          }
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "MKKnOTqo87V6",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        ""
+      ],
+      "execution_count": 0,
+      "outputs": []
+    }
+  ]
+}
